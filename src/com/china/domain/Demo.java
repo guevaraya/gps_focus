@@ -24,7 +24,19 @@ class MyFrame extends JFrame {
 	JLabel point1, point2, distence, distence_value, bearing, bearing_value;
 	TextField latitude1, latitude2, longitude1, longitude2;
 	JButton button1;
-
+	private JMenuBar	mb;
+	private JMenu[] Menus = {
+			new JMenu("File"),
+			new JMenu("Option"),
+			new JMenu("Help")
+	};
+	private JMenuItem[] Items = {
+			new JMenuItem("open"),
+			new JMenuItem("exit"),
+			new JMenuItem("setting"),
+			new JMenuItem("about"),
+	};
+	private JTabbedPane Tabs;	
 	public class Point {
 		double lat;
 		double lon;
@@ -134,8 +146,21 @@ class MyFrame extends JFrame {
 	 */
 	public MyFrame(String name) throws Exception {
 		super(name);
-		JPanel[] p = new JPanel[5];
+		/* Init Menubar */
+		Menus[0].add(Items[0]);
+		Menus[0].add(Items[1]);
+
+		Menus[1].add(Items[2]);
+		Menus[2].add(Items[3]);
 		
+		mb = new JMenuBar();
+		mb.add(Menus[0]);
+		mb.add(Menus[1]);
+		mb.add(Menus[2]);
+		setJMenuBar(mb);
+		
+
+		JPanel[] p = new JPanel[5];
 		GridBagConstraints gridbagcn = new GridBagConstraints();
 		gridbagcn.gridheight = 1;
 		gridbagcn.gridwidth = 1;
@@ -178,9 +203,14 @@ class MyFrame extends JFrame {
 		p[4] = new JPanel(new FlowLayout());
 		p[4].add(button1);
 		
-		this.setLayout(new GridLayout(5, 1));
+		JPanel Calibrate = new JPanel(); 
+		Calibrate.setLayout(new GridLayout(5, 1));
 		for(int i=0;i <5;i++)
-		this.add(p[i]);
+		Calibrate.add(p[i]);
+		Tabs = new JTabbedPane();
+		Tabs.add("Ð£×¼",Calibrate);
+		Tabs.add("¼ÆËã",new JButton("button Calculate"));
+		this.add(Tabs);	
 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(400, 400);
