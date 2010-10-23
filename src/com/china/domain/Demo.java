@@ -12,11 +12,11 @@ public class Demo {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("Hello,world!");
-		new MyFrame("Calculate Distance/Bearing");
+		new TOrientateFrame("Calculate Distance/Bearing");
 	}
 }
 
-class MyFrame extends JFrame {
+class TOrientateFrame extends JFrame {
 	/**
 	 * 
 	 */
@@ -36,7 +36,7 @@ class MyFrame extends JFrame {
 			new JMenuItem("setting"),
 			new JMenuItem("about"),
 	};
-	private JTabbedPane Tabs;	
+	private JTabbedPane Tabs = new JTabbedPane();;	
 	public class Point {
 		double lat;
 		double lon;
@@ -92,59 +92,7 @@ class MyFrame extends JFrame {
 	 * @param name
 	 * @throws Exception
 	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	/**
-	 * @param name
-	 * @throws Exception
-	 */
-	public MyFrame(String name) throws Exception {
+	public TOrientateFrame(String name) throws Exception {
 		super(name);
 		/* Init Menubar */
 		Menus[0].add(Items[0]);
@@ -159,7 +107,41 @@ class MyFrame extends JFrame {
 		mb.add(Menus[2]);
 		setJMenuBar(mb);
 		
+		/* Tab Calibrate */
+		JPanel Calibrate = new JPanel(); 
+		Object[] columnName = {"地名","纬度","精度","距离","偏向角"};
+		Object[][] data = {
+				{"德庆镇党委", new Double(91.3651), new Double (29.6719),0,0}, 
+				{"德庆镇党委", new Double(91.3667 ), new Double (29.6693),0,0},
+				{"铁索桥", new Double(91.3760), new Double (29.6774),0,0},
+				{"铁索桥", new Double(91.3776 ), new Double (29.6746),0,0},
+				{"x西藏大学", new Double(91.1454), new Double (29.6490),0,0},		
+				{"x西藏大学", new Double(91.1470), new Double (29.6463),0,0},
+				{null,null,null,null,null},
+				{null,null,null,null,null},
+				{null,null,null,null,null},
+				{null,null,null,null,null},
+			};
+		JTable table = new JTable(data, columnName);
+	//	table.setPreferredScrollableViewportSize(new Dimension(100, 30));
 
+		JPanel north = new JPanel();
+		north.add(table);
+		JPanel center = new JPanel();
+		center.add(new JLabel("平均偏向角："));
+		center.add(new JLabel("xxxx  °"));
+		JPanel south = new JPanel();
+		south.add(new JButton("计算"));
+		south.add(new JButton("下一步"));
+	
+		Calibrate.setLayout(new BorderLayout());
+		Calibrate.add(north,BorderLayout.NORTH);
+		Calibrate.add(center,BorderLayout.CENTER);
+		Calibrate.add(south,BorderLayout.SOUTH);
+		Calibrate.setOpaque(true);
+		Tabs.add("校准",Calibrate);
+		
+		/* Tab Calibrate */
 		JPanel[] p = new JPanel[5];
 		GridBagConstraints gridbagcn = new GridBagConstraints();
 		gridbagcn.gridheight = 1;
@@ -170,6 +152,7 @@ class MyFrame extends JFrame {
 		gridbagcn.weightx = 0;
 		gridbagcn.anchor = GridBagConstraints.WEST;
 		point1 = new JLabel("point1:");
+
 		latitude1 = new TextField("29.40158 ");
 		longitude1 = new TextField("91.22004 ");
 		
@@ -203,17 +186,15 @@ class MyFrame extends JFrame {
 		p[4] = new JPanel(new FlowLayout());
 		p[4].add(button1);
 		
-		JPanel Calibrate = new JPanel(); 
-		Calibrate.setLayout(new GridLayout(5, 1));
-		for(int i=0;i <5;i++)
-		Calibrate.add(p[i]);
-		Tabs = new JTabbedPane();
-		Tabs.add("校准",Calibrate);
-		Tabs.add("计算",new JButton("button Calculate"));
-		this.add(Tabs);	
+		JPanel Calculate = new JPanel();
+		Calculate.setLayout(new GridLayout(5, 1));
+		for(int i=0; i < 5;i++)
+			Calculate.add(p[i]);
+		Tabs.add("计算",Calculate);
 
+		this.add(Tabs);	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(400, 400);
+		this.setSize(420, 380);
 		this.setVisible(true);
 
 		button1.addActionListener(Bl);
