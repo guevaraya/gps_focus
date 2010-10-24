@@ -117,16 +117,13 @@ class TOrientateFrame extends JFrame {
 				{"铁索桥", new Double(91.3776 ), new Double (29.6746),0,0},
 				{"x西藏大学", new Double(91.1454), new Double (29.6490),0,0},		
 				{"x西藏大学", new Double(91.1470), new Double (29.6463),0,0},
-				{null,null,null,null,null},
-				{null,null,null,null,null},
-				{null,null,null,null,null},
-				{null,null,null,null,null},
+
 			};
 		JTable table = new JTable(data, columnName);
 	//	table.setPreferredScrollableViewportSize(new Dimension(100, 30));
-
+		JScrollPane scroll = new JScrollPane(table);
 		JPanel north = new JPanel();
-		north.add(table);
+		north.add(scroll);
 		JPanel center = new JPanel();
 		center.add(new JLabel("平均偏向角："));
 		center.add(new JLabel("xxxx  °"));
@@ -194,9 +191,9 @@ class TOrientateFrame extends JFrame {
 
 		this.add(Tabs);	
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(420, 380);
+	//	this.setSize(420, 380);
 		this.setVisible(true);
-
+		this.pack();
 		button1.addActionListener(Bl);
 		// TimeUnit.SECONDS.sleep(10);
 		// label.setText("Hello,kit!");
