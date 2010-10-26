@@ -26,15 +26,15 @@ class TOrientateFrame extends JFrame {
 	JButton button1;
 	private JMenuBar	mb;
 	private JMenu[] Menus = {
-			new JMenu("File"),
-			new JMenu("Option"),
-			new JMenu("Help")
+			new JMenu("文件"),
+			new JMenu("选项"),
+			new JMenu("帮助")
 	};
 	private JMenuItem[] Items = {
-			new JMenuItem("open"),
-			new JMenuItem("exit"),
-			new JMenuItem("setting"),
-			new JMenuItem("about"),
+			new JMenuItem("打开"),
+			new JMenuItem("退出"),
+			new JMenuItem("设置"),
+			new JMenuItem("关于"),
 	};
 	private JTabbedPane Tabs = new JTabbedPane();;	
 	public class Point {
@@ -95,10 +95,12 @@ class TOrientateFrame extends JFrame {
 	public TOrientateFrame(String name) throws Exception {
 		super(name);
 		/* Init Menubar */
+		Items[1].addActionListener(new ExitAction());
 		Menus[0].add(Items[0]);
 		Menus[0].add(Items[1]);
 
 		Menus[1].add(Items[2]);
+		Items[3].addActionListener(new AboutAction());
 		Menus[2].add(Items[3]);
 		
 		mb = new JMenuBar();
@@ -199,6 +201,59 @@ class TOrientateFrame extends JFrame {
 		// label.setText("Hello,kit!");
 	}
 
+	public static class ExitAction implements ActionListener {
+		public void actionPerformed (ActionEvent e){
+			System.out.println("GoodBye \n curel world");
+			System.exit(0);
+		}
+		
+	};
+	 class AboutDialog extends JDialog {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public AboutDialog(JFrame parent){
+			super(parent, "关于",true);
+			setLocationRelativeTo(parent);
+			setLayout(new GridLayout(3,1));
+			JLabel L1 = new JLabel(" Copyright 2010-2012. All rights reserved ");
+			L1.setHorizontalAlignment(JLabel.CENTER);
+			JLabel L2 = new JLabel("Guevara.ya@gmail.com ");
+			L2.setHorizontalAlignment(JLabel.CENTER);
+			add(L1);
+			add(L2);
+			JButton ok = new JButton("确定");
+			ok.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					dispose();
+				}
+			});
+			JPanel p = new JPanel();
+			p.add(ok);
+			add(p);
+			pack();
+		}
+	}
+	
+	protected  class AboutAction implements ActionListener{
+		public void actionPerformed (ActionEvent e){
+		AboutDialog  about =new AboutDialog(null);
+		about.setVisible(true);
+		}
+		
+		
+	} 
+	
+	protected static class CloseHandler	extends WindowAdapter{
+		public void windowClosing(final WindowEvent event)
+		{
+			System.exit(0);
+
+		}
+
+	} 
 	class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 
@@ -213,4 +268,5 @@ class TOrientateFrame extends JFrame {
 			bearing_value.setText(Double.toString(p3.lat) + " ---"+ Double.toString(p3.lon));
 		}
 	}
+	
 }
