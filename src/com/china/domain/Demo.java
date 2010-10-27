@@ -2,6 +2,9 @@ package com.china.domain;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+
+
 import javax.swing.*;
 
 public class Demo {
@@ -37,56 +40,12 @@ class TOrientateFrame extends JFrame {
 			new JMenuItem("πÿ”⁄"),
 	};
 	private JTabbedPane Tabs = new JTabbedPane();;	
-	public class Point {
-		double lat;
-		double lon;
-
-		Point(Double lat, Double lon) {
-			this.lat = lat;
-			this.lon = lon;
-		}
-
-		public double distance(Point p) {
-			double lat1 = Math.toRadians(lat);
-			double lon1 = Math.toRadians(lon);
-			double lat2 = Math.toRadians(p.lat);
-			double lon2 = Math.toRadians(p.lon);
-
-			double tmp = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1)
-					* Math.cos(lat2) * Math.cos(lon2 - lon1);
-			double dis = RADIUS * (Math.acos(tmp));
-			return dis;
-		}
-
-		public double bearing(Point p) {
-			double lat1 = Math.toRadians(lat);
-			double lon1 = Math.toRadians(lon);
-			double lat2 = Math.toRadians(p.lat);
-			double lon2 = Math.toRadians(p.lon);
-
-			double y = Math.sin(lon2 - lon1) * Math.cos(lat2);
-			double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
-					* Math.cos(lat2) * Math.cos(lon2 - lon1);
-			double bear = Math.toDegrees(Math.atan2(y, x));
-			return bear;
-		}
-
-		public Point destination(Double dis, Double bear) {
-			double lat1 = Math.toRadians(lat);
-			double lon1 = Math.toRadians(lon);
-			double lat2 = Math.asin(Math.sin(lat1) * Math.cos(dis / RADIUS))
-					+ Math.cos(lat1) * Math.sin(dis / RADIUS) * Math.cos(bear);
-			double lon2 = lon1
-					+ Math.atan2(Math.sin(bear) * Math.sin(dis / RADIUS)
-							* Math.cos(lat1), Math.cos(dis / RADIUS)
-							- Math.sin(lat1) * Math.sin(lat2));
-			return new Point(Math.toDegrees(lat2),Math.toDegrees(lon2));
-		}
-	};
+	
 
 	private ButtonListener Bl = new ButtonListener();
+	public JLabel statBar;
 
-	private double RADIUS = 6371;// radius of earth 6,371km
+
 
 	/**
 	 * @param name
@@ -95,6 +54,7 @@ class TOrientateFrame extends JFrame {
 	public TOrientateFrame(String name) throws Exception {
 		super(name);
 		/* Init Menubar */
+		Items[0].addActionListener(new OpenAction());
 		Items[1].addActionListener(new ExitAction());
 		Menus[0].add(Items[0]);
 		Menus[0].add(Items[1]);
@@ -191,7 +151,8 @@ class TOrientateFrame extends JFrame {
 			Calculate.add(p[i]);
 		Tabs.add("º∆À„",Calculate);
 
-		this.add(Tabs);	
+		
+		this.add(Tabs);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	//	this.setSize(420, 380);
 		this.setVisible(true);
@@ -200,7 +161,42 @@ class TOrientateFrame extends JFrame {
 		// TimeUnit.SECONDS.sleep(10);
 		// label.setText("Hello,kit!");
 	}
-
+	public class OpenAction implements ActionListener {
+		public void actionPerformed (ActionEvent e){
+		JFileChooser fileChooser = new JFileChooser();
+		int option = fileChooser.showOpenDialog(TOrientateFrame.this);
+		if(option == JFileChooser.APPROVE_OPTION){
+			File file = fileChooser.getSelectedFile();
+			try {
+				FileReader  reader = new FileReader(file);
+				BufferedReader bufReader = new BufferedReader(reader);
+				String data;
+				while((data = bufReader.readLine())!=null){
+				
+					String[] subData = data.split(" ",6);
+					Point p1 = new Point(subData[0],subData[1]);
+					Point p2 = new Point(subData[2],subData[3]);
+					Earth earth = new Earth(p1 ,p2, Double.parseDouble(subData[4]), Double.parseDouble(subData[5]));
+				for(int i=0; i<6; i++)
+					System.out.println(subData[i]);
+				System.out.println("line: "+ data);
+				}
+			bufReader.close();
+			reader.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException ee) {
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			System.out.println("select filename:"+file.getPath());
+		}else{
+			System.out.println("open file cancel");
+		}
+		}
+	}
 	public static class ExitAction implements ActionListener {
 		public void actionPerformed (ActionEvent e){
 			System.out.println("GoodBye \n curel world");
@@ -239,7 +235,7 @@ class TOrientateFrame extends JFrame {
 	
 	protected  class AboutAction implements ActionListener{
 		public void actionPerformed (ActionEvent e){
-		AboutDialog  about =new AboutDialog(null);
+		AboutDialog  about =new AboutDialog(TOrientateFrame.this);
 		about.setVisible(true);
 		}
 		
@@ -270,3 +266,5 @@ class TOrientateFrame extends JFrame {
 	}
 	
 }
+
+
