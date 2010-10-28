@@ -1,9 +1,24 @@
 package com.china.domain;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -24,6 +39,7 @@ class TOrientateFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 4398852471661924273L;
+	private static  String SPLIT = "\\s+"; 
 	JLabel point1, point2, distence, distence_value, bearing, bearing_value;
 	TextField latitude1, latitude2, longitude1, longitude2;
 	JButton button1;
@@ -40,13 +56,17 @@ class TOrientateFrame extends JFrame {
 			new JMenuItem("关于"),
 	};
 	private JTabbedPane Tabs = new JTabbedPane();;	
-	
+	JTable table;
 
 	private ButtonListener Bl = new ButtonListener();
-	public JLabel statBar;
+	private JLabel statBar;
 
 
-
+	private List<Earth> earthList = new ArrayList<Earth>();
+	/**
+	 * @param name
+	 * @throws Exception
+	 */
 	/**
 	 * @param name
 	 * @throws Exception
@@ -81,7 +101,7 @@ class TOrientateFrame extends JFrame {
 				{"x西藏大学", new Double(91.1470), new Double (29.6463),0,0},
 
 			};
-		JTable table = new JTable(data, columnName);
+		table = new JTable(data, columnName);
 	//	table.setPreferredScrollableViewportSize(new Dimension(100, 30));
 		JScrollPane scroll = new JScrollPane(table);
 		JPanel north = new JPanel();
@@ -151,7 +171,6 @@ class TOrientateFrame extends JFrame {
 			Calculate.add(p[i]);
 		Tabs.add("计算",Calculate);
 
-		
 		this.add(Tabs);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	//	this.setSize(420, 380);
@@ -162,6 +181,9 @@ class TOrientateFrame extends JFrame {
 		// label.setText("Hello,kit!");
 	}
 	public class OpenAction implements ActionListener {
+		/* (non-Javadoc)
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
 		public void actionPerformed (ActionEvent e){
 		JFileChooser fileChooser = new JFileChooser();
 		int option = fileChooser.showOpenDialog(TOrientateFrame.this);
@@ -171,16 +193,32 @@ class TOrientateFrame extends JFrame {
 				FileReader  reader = new FileReader(file);
 				BufferedReader bufReader = new BufferedReader(reader);
 				String data;
-				while((data = bufReader.readLine())!=null){
 				
-					String[] subData = data.split(" ",6);
-					Point p1 = new Point(subData[0],subData[1]);
-					Point p2 = new Point(subData[2],subData[3]);
-					Earth earth = new Earth(p1 ,p2, Double.parseDouble(subData[4]), Double.parseDouble(subData[5]));
-				for(int i=0; i<6; i++)
-					System.out.println(subData[i]);
-				System.out.println("line: "+ data);
+				while((data = bufReader.readLine())!=null){
+					int i = 0;
+					String[] subData = data.split(TOrientateFrame.SPLIT,Earth.LEN);
+				//for(i=0; i<7; i++)
+				//	System.out.println("["+i+"]= "+subData[i]);
+					String name = subData[0];
+					Point p1 = new Point(subData[1],subData[2]);
+					Point p2 = new Point(subData[3],subData[4]);
+					earthList.add(new Earth(name,p1 ,p2, Double.parseDouble(subData[5]), Double.parseDouble(subData[6])));
 				}
+				int row = 0;
+				for(Earth el : earthList){
+					int col = 0;
+					table.setValueAt(el.getName(),row,col++);
+					/*Set Point one/two  */
+					table.setValueAt(el.getPointOne().lat, row, col++);
+					table.setValueAt(el.getPointOne().lon, row, col++);
+			//		table.setValueAt(el.getPointTwo().lat, row, col++);
+			//		table.setValueAt(el.getPointTwo().lon, row, col++);
+					/* Set distance and bearing */
+					table.setValueAt(el.getDistance(), row, col++);					
+					table.setValueAt(el.getBearing(), row, col++);
+					row++;
+				}
+					
 			bufReader.close();
 			reader.close();
 			} catch (FileNotFoundException e1) {
