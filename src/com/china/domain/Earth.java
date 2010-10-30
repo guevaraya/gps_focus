@@ -14,11 +14,23 @@ public class Earth {
 		dis = distance;
 		bear = bearing;
 	};
+	Earth(String str,Point point1,Point point2,String distance,String bearing){
+		nameTag = str;
+		p1 = point1;
+		p2 = point2;
+		dis = Double.parseDouble(distance);
+		bear = Double.parseDouble(bearing);
+	};
 	public String getName(){return nameTag;};
 	public Point getPointOne(){ return p1;	};
 	public Point getPointTwo(){ return p2;	};
-	public double getDistance(){return dis;};
-	public double getBearing(){return bear;};
+	public double getDistance(){
+		dis = p1.distance(p2);
+		return dis;
+	};
+	public double getBearing(){
+		bear = p1.bearing(p2);
+		return bear;};
 	};
 class Point {
 	double lat;
