@@ -2,10 +2,7 @@ package com.china.domain;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -20,6 +17,8 @@ import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import com.china.earth.ui.TabCalculate;
 
 public class Demo {
 
@@ -39,18 +38,20 @@ class TOrientateFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 4398852471661924273L;
 	private static String SPLIT = "\\s+";
-	JLabel point1, point2, distence, distence_value, bearing, bearing_value;
+/* 
+ * 	JLabel point1, point2, distence, distence_value, bearing, bearing_value;
 	TextField latitude1, latitude2, longitude1, longitude2;
+ */
 	JButton button1;
 	private JMenuBar mb;
 	private JMenu[] Menus = { new JMenu("文件"), new JMenu("选项"), new JMenu("帮助") };
 	private JMenuItem[] Items = { new JMenuItem("打开"), new JMenuItem("退出"),
 			new JMenuItem("设置"), new JMenuItem("关于"), };
 	private JTabbedPane Tabs = new JTabbedPane();;
+	private TabCalculate tab1;
 	JTable table;
 	DefaultTableModel tableModel;
 	JLabel aveBear;
-	private ButtonListener Bl = new ButtonListener();
 	private JLabel statBar;
 
 	private List<Earth> earthList = new ArrayList<Earth>();
@@ -120,7 +121,8 @@ class TOrientateFrame extends JFrame {
 		Tabs.add("校准", Calibrate);
 
 		/* Tab Calculate */
-		JPanel[] p = new JPanel[5];
+/*
+ * 		JPanel[] p = new JPanel[5];
 		GridBagConstraints gridbagcn = new GridBagConstraints();
 		gridbagcn.gridheight = 1;
 		gridbagcn.gridwidth = 1;
@@ -129,10 +131,7 @@ class TOrientateFrame extends JFrame {
 		gridbagcn.weightx = 0;
 		gridbagcn.weightx = 0;
 		gridbagcn.anchor = GridBagConstraints.WEST;
-		point1 = new JLabel("point1:");
 
-		latitude1 = new TextField("29.40158 ");
-		longitude1 = new TextField("91.22004 ");
 
 		p[0] = new JPanel(new GridBagLayout());
 		p[0].add(point1, gridbagcn);
@@ -164,11 +163,11 @@ class TOrientateFrame extends JFrame {
 		p[4] = new JPanel(new FlowLayout());
 		p[4].add(button1);
 
-		JPanel Calculate = new JPanel();
-		Calculate.setLayout(new GridLayout(5, 1));
-		for (int i = 0; i < 5; i++)
-			Calculate.add(p[i]);
-		Tabs.add("计算", Calculate);
+*/
+
+
+		tab1 = new TabCalculate();	
+		Tabs.add("计算", tab1);
 
 		this.setLayout(new BorderLayout());
 		this.add(Tabs, BorderLayout.NORTH);
@@ -184,8 +183,7 @@ class TOrientateFrame extends JFrame {
 		// this.setSize(420, 380);
 		this.setVisible(true);
 		this.pack();
-		button1.addActionListener(Bl);
-		// TimeUnit.SECONDS.sleep(10);
+			// TimeUnit.SECONDS.sleep(10);
 		// label.setText("Hello,kit!");
 	}
 
@@ -336,20 +334,5 @@ class TOrientateFrame extends JFrame {
 
 	}
 
-	class ButtonListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-
-			Double lat = Double.parseDouble(latitude1.getText());
-			Double lon = Double.parseDouble(longitude1.getText());
-			Point p1 = new Point(lat, lon);
-			lat = Double.parseDouble(latitude2.getText());
-			lon = Double.parseDouble(longitude2.getText());
-			Point p2 = new Point(lat, lon);
-			Point p3 = p1.destination(p1.distance(p2), p1.bearing(p2));
-			distence_value.setText(Double.toString(p1.distance(p2)) + " Km");
-			bearing_value.setText(Double.toString(p3.lat) + " ---"
-					+ Double.toString(p3.lon));
-		}
-	}
 
 }
