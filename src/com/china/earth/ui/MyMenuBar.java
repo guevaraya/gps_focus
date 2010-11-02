@@ -73,6 +73,7 @@ public class MyMenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 					
 			JFileChooser fileChooser = new JFileChooser();
+			  fileChooser.setCurrentDirectory(new File("."));
 			int option = fileChooser.showOpenDialog(mother);
 			if (option == JFileChooser.APPROVE_OPTION) {
 				File file = fileChooser.getSelectedFile();
@@ -88,12 +89,16 @@ public class MyMenuBar extends JMenuBar {
 						TabCalibrate.tableModel.removeRow(0);
 					row = 0;
 					while ((data = bufReader.readLine()) != null) {
-						row++;
+						
 						String[] subData = data.split(Earth.SPLIT,
 								Earth.LEN + 1);
-						// for(i=0; i<7; i++)
-						// System.out.println("["+i+"]= "+subData[i]);
+						// for(i=0; i<subData.length; i++)
+						// System.out.print(" {"+ subData[i]);
+						// System.out.println("subData.length"+ subData.length);
 						TabCalibrate.tableModel.addRow(subData);
+						for(i = subData.length-1; i < Earth.LEN; i++)
+							TabCalibrate.tableModel.setValueAt(0, row, i);
+						row++;
 					}
 					Demo.statBar.setText("成功导入" + row + "条记录");
 					Demo.Tabs.setSelectedIndex(0);

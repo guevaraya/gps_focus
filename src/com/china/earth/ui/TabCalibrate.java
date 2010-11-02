@@ -51,13 +51,16 @@ public class TabCalibrate extends JPanel{
 	List<Earth> earthList = new ArrayList<Earth>();
 	JTextField aveBear;
 	private JFrame	mother;
+	public static Object[] columnName = {
+		"地  名", 
+		"纬  度1", "精  度1",
+		"纬  度2", "精  度2",
+		"距  离", "偏 向 角" 
+		};
 	public TabCalibrate(JFrame frame){
 		mother = frame;
 
 	/* Tab Calibrate */
-	
-	Object[] columnName = { "地  名", "纬  度1", "精  度1", "纬  度2", "精  度2",
-			"距  离", "偏 向 角" };
 	Object[][] data = {
 			{ "德庆镇党委", new Double(91.3651), new Double(29.6719), 0, 0, 0, 0 },
 			{ "德庆镇党委", new Double(91.3667), new Double(29.6693), 0, 0, 0, 0 },
@@ -99,9 +102,11 @@ public class TabCalibrate extends JPanel{
 class CaliAction implements ActionListener {
 	public void actionPerformed (ActionEvent e)
 	{
+		
 		Integer row = 0,col = 0;
 		Double sumBear = 0.0;
 		for(row = 0; row < tableModel.getRowCount(); row++){
+		
 			col = 0;
 			String name =  table.getValueAt(row, col++).toString();
 			Point p1 = new Point(table.getValueAt(row, col++).toString(),
@@ -138,6 +143,7 @@ class CaliAction implements ActionListener {
  class SaveAction implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			JFileChooser fileChooser = new JFileChooser();
+			  fileChooser.setCurrentDirectory(new File("."));
 			File file;
 			int option = fileChooser.showSaveDialog(mother);
 			if (option == JFileChooser.APPROVE_OPTION) {
@@ -148,12 +154,19 @@ class CaliAction implements ActionListener {
 					String data;
 					int col;
 					Integer row ;
+					data =  "";
+					for(col = 0; col <Earth.LEN; col++){
+						data = data.concat((String) TabCalibrate.columnName[col]);
+						data = data.concat(",");
+					}
+					bufWriter.write(data);
+					bufWriter.newLine();
 					for(row = 0; row < tableModel.getRowCount(); row++){
 						col = 0;
-						data =  table.getValueAt(row, col++).toString();
-						for(col = 0; col <Earth.LEN-1; col++){
+						data =  "";
+						for(col = 0; col <Earth.LEN; col++){
 							data = data.concat(table.getValueAt(row, col).toString());
-							data = data.concat("	");
+							data = data+",";
 						}
 					
 						bufWriter.write(data);
